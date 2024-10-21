@@ -1,5 +1,5 @@
 import numpy as np
-from ml_algorithms.base.base_model import BaseModel
+from ..base.base_model import BaseModel
 
 class DecisionTreeNode:
     """
@@ -22,3 +22,30 @@ class DecisionTreeNode:
         """
         return self.value is not None
 
+
+class DecisionTreeClassifier(BaseModel):
+    """
+    Decision Tree Classifier implementing CART algorithm.
+    """
+
+    def __init__(self, max_depth=None, min_samples_split=2):
+        """
+        Initializes the Decision Tree Classifier.
+        """
+        self.max_depth = max_depth                  # Maximum depth of the tree
+        self.min_samples_split = min_samples_split  # Minimum number of samples required to split a node
+        self.root = None                            # Root node of the tree
+
+    def fit(self, X, y):
+        """
+        Builds the decision tree classifier.
+        """
+        self.n_classes_ = len(set(y))  # Number of classes
+        self.n_features_ = X.shape[1]  # Number of features
+        self.root = self._grow_tree(X, y)
+
+    def predict(self, X):
+        """
+        Predicts class labels for samples in X.
+        """
+        return np.array([self._predict(inputs) for inputs in X])
