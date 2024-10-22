@@ -77,3 +77,43 @@ class DecisionTreeClassifier(BaseModel):
                 node.left = self._grow_tree(X_left, y_left, depth + 1)
                 node.right = self._grow_tree(X_right, y_right, depth + 1)
         return node
+
+    def _best_split(self, X, y):
+        """
+        Finds the best feature and threshold to split on.
+        """
+        m, n = X.shape
+        if m <= 1:
+            return None, None
+
+        # Initialize variables to track the best split
+        best_gini = 1.0
+        best_idx, best_thr = None, None
+
+        # Loop over all features
+        for idx in range(n):
+            thresholds, classes = zip(*sorted(zip(X[:, idx], y)))
+            num_left = [0] * self.n_classes_
+            num_right = num_samples_per_class = [np.sum(y == i) for i in range(self.n_classes_)]
+
+            for i in range(1, m):  # Possible split positions
+                c = classes[i - 1]
+                num_left[c] += 1
+                num_right[c] -= 1
+
+                gini_left = 1.0 - sum((num_left[x] / i) ** 2 for x in range(self.n_classes_))
+                gini_right = 1.0 - sum((num_right[x] / (m - i)) ** 2 for x in range(self.n_classes_))
+
+                # Weighted average of the impurity
+                gini = (i * gini_left + (m - i) * gini_right) / m
+
+                # Update the best split if needed
+                if thresholds[i] == thresholds[i - 1]:
+                    continue  # Skip if threshold is the same as previous
+
+                if gini < best_gini:
+                    best_gini = gini
+                    best_idx = idx
+                    best_thr = (thresholds[i] + thresholds[i - 1]) / 2  # Midpoint
+
+        return best_idx, best_thr
