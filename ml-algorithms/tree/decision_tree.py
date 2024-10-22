@@ -49,3 +49,10 @@ class DecisionTreeClassifier(BaseModel):
         Predicts class labels for samples in X.
         """
         return np.array([self._predict(inputs) for inputs in X])
+
+    def _gini(self, y):
+        """
+        Calculates the Gini Impurity for labels y.
+        """
+        m = len(y)
+        return 1.0 - sum((np.sum(y == c) / m) ** 2 for c in np.unique(y))
