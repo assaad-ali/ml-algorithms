@@ -117,3 +117,15 @@ class DecisionTreeClassifier(BaseModel):
                     best_thr = (thresholds[i] + thresholds[i - 1]) / 2  # Midpoint
 
         return best_idx, best_thr
+
+    def _predict(self, inputs):
+        """
+        Predicts a single sample.
+        """
+        node = self.root
+        while not node.is_leaf_node():
+            if inputs[node.feature_index] < node.threshold:
+                node = node.left
+            else:
+                node = node.right
+        return node.value
