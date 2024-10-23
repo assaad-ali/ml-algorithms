@@ -104,6 +104,10 @@ class DecisionTreeClassifier(BaseModel):
 
         # Loop over selected features
         for idx in features:
+
+            if idx >= X.shape[1]:
+                continue
+
             # Sort data along the feature axis
             thresholds, classes = zip(*sorted(zip(X[:, idx], y)))
 

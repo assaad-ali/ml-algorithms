@@ -46,8 +46,9 @@ class RandomForestClassifier(BaseModel):
                 max_depth=self.max_depth,
                 min_samples_split=self.min_samples_split
             )
-            # Randomly select features for splitting
-            tree.feature_indices = self._get_feature_indices(X.shape[1])
+            # Randomly select features for splitting, ensuring the selection is within bounds
+            tree.feature_indices = self._get_feature_indices(X_sample.shape[1])
+            
             # Fit the tree on the bootstrap sample
             tree.fit(X_sample[:, tree.feature_indices], y_sample)
             self.trees.append(tree)
