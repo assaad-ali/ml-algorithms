@@ -67,3 +67,44 @@ class RandomForestClassifier(BaseModel):
         # Majority vote
         y_pred = [Counter(tree_preds[:, i]).most_common(1)[0][0] for i in range(X.shape[0])]
         return np.array(y_pred)
+
+    def _bootstrap_sample(self, X, y):
+        """
+        Generate a bootstrap sample of the dataset.
+
+        Parameters:
+            X (ndarray): Feature dataset.
+            y (ndarray): Target labels.
+
+        Returns:
+            X_sample (ndarray): Bootstrap sample of features.
+            y_sample (ndarray): Bootstrap sample of labels.
+        """
+        n_samples = X.shape[0]
+        indices = np.random.choice(n_samples, size=n_samples, replace=True)
+        return X[indices], y[indices]
+
+    def _get_feature_indices(self, n_features):
+        """
+        Get the indices of features to be used for splitting.
+
+        Parameters:
+            n_features (int): Total number of features.
+
+        Returns:
+            feature_indices (ndarray): Indices of selected features.
+        """
+        if self.max_features == 'sqrt':
+            max_features = int(np.sqrt(n_features))
+        elif self.max_features == 'log2':
+            max_features = int(np.log2(n_features))
+        elif isinstance(self.max_features, int):
+            max_features = self.max_features
+        elif isinstance(self.max_features, float):
+            max_features = int(self.max_features * n_features)
+        else:
+            max_features = n_features  # Use all features
+
+        # Randomly select feature indices
+        feature_indices = np.random.choice(n_features, max_features, replace=False)
+        return feature_indices
