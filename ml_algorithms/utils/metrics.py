@@ -86,3 +86,19 @@ def recall_score(y_true, y_pred, average='binary'):
             return np.average(recalls, weights=weights)
     else:
         raise ValueError("Unsupported 'average' argument. Choose from 'binary', 'macro', 'micro', 'weighted'.")
+
+def f1_score(y_true, y_pred, average='binary'):
+    """
+    Calculates the F1 score.
+    
+    Parameters:
+        y_true (ndarray): True labels.
+        y_pred (ndarray): Predicted labels.
+        average (str): Type of averaging performed ('binary', 'macro', 'micro', 'weighted').
+    
+    Returns:
+        float: F1 score.
+    """
+    prec = precision_score(y_true, y_pred, average=average)
+    rec = recall_score(y_true, y_pred, average=average)
+    return 2 * (prec * rec) / (prec + rec) if (prec + rec) != 0 else 0
