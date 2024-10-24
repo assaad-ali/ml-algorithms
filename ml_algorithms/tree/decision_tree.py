@@ -15,7 +15,7 @@ class DecisionTreeNode:
         self.left = left                    # Left child node
         self.right = right                  # Right child node
         self.value = value                  # Value at leaf node
-        self.feature_indices = None         # Feature indices for splitting
+        
 
     def is_leaf_node(self):
         """
@@ -36,6 +36,7 @@ class DecisionTreeClassifier(BaseModel):
         self.max_depth = max_depth                  # Maximum depth of the tree
         self.min_samples_split = min_samples_split  # Minimum number of samples required to split a node
         self.root = None                            # Root node of the tree
+        self.feature_indices = None         # Feature indices for splitting
 
     def fit(self, X, y):
         """
