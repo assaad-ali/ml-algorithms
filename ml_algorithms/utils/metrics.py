@@ -1,3 +1,4 @@
+import numpy as np
 
 def accuracy_score(y_true, y_pred):
     """
@@ -103,9 +104,11 @@ def f1_score(y_true, y_pred, average='binary'):
     rec = recall_score(y_true, y_pred, average=average)
     return 2 * (prec * rec) / (prec + rec) if (prec + rec) != 0 else 0
 
+import numpy as np
+
 def confusion_matrix(y_true, y_pred, labels=None):
     """
-    Computes the confusion matrix.
+    Computes the confusion matrix with labeled rows and columns.
     
     Parameters:
         y_true (ndarray): True labels.
@@ -113,14 +116,35 @@ def confusion_matrix(y_true, y_pred, labels=None):
         labels (list): List of labels to index the matrix.
     
     Returns:
-        ndarray: Confusion matrix.
+        tuple: (Confusion matrix, Labels)
+            - Confusion matrix (ndarray): The confusion matrix with shape (n_classes, n_classes)
+            - Labels (ndarray): The labels corresponding to the rows and columns.
     """
     if labels is None:
         labels = np.unique(np.concatenate((y_true, y_pred)))
+        
     matrix = np.zeros((len(labels), len(labels)), dtype=int)
     label_to_index = {label: index for index, label in enumerate(labels)}
+    
     for t, p in zip(y_true, y_pred):
         i = label_to_index[t]
         j = label_to_index[p]
         matrix[i, j] += 1
+    
     return matrix
+
+def plot_confusion_matrix(matrix, labels):
+    """
+    Prints the confusion matrix with labels for better understanding.
+    
+    Parameters:
+        matrix (ndarray): Confusion matrix.
+        labels (list or ndarray): List or array of labels corresponding to the matrix rows and columns.
+    """
+    # Print the header row (Predicted labels)
+    print("Confusion Matrix:")
+    print(f"Predicted labels -> {labels}")
+    
+    # Print each row with actual labels on the side
+    for i, row in enumerate(matrix):
+        print(f"Actual label {labels[i]}: {row}")
