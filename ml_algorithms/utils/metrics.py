@@ -102,3 +102,25 @@ def f1_score(y_true, y_pred, average='binary'):
     prec = precision_score(y_true, y_pred, average=average)
     rec = recall_score(y_true, y_pred, average=average)
     return 2 * (prec * rec) / (prec + rec) if (prec + rec) != 0 else 0
+
+def confusion_matrix(y_true, y_pred, labels=None):
+    """
+    Computes the confusion matrix.
+    
+    Parameters:
+        y_true (ndarray): True labels.
+        y_pred (ndarray): Predicted labels.
+        labels (list): List of labels to index the matrix.
+    
+    Returns:
+        ndarray: Confusion matrix.
+    """
+    if labels is None:
+        labels = np.unique(np.concatenate((y_true, y_pred)))
+    matrix = np.zeros((len(labels), len(labels)), dtype=int)
+    label_to_index = {label: index for index, label in enumerate(labels)}
+    for t, p in zip(y_true, y_pred):
+        i = label_to_index[t]
+        j = label_to_index[p]
+        matrix[i, j] += 1
+    return matrix
