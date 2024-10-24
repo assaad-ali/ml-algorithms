@@ -49,3 +49,40 @@ def precision_score(y_true, y_pred, average='binary'):
             return np.average(precisions, weights=weights)
     else:
         raise ValueError("Unsupported 'average' argument. Choose from 'binary', 'macro', 'micro', 'weighted'.")
+
+def recall_score(y_true, y_pred, average='binary'):
+    """
+    Calculates the recall of the predictions.
+    
+    Parameters:
+        y_true (ndarray): True labels.
+        y_pred (ndarray): Predicted labels.
+        average (str): Type of averaging performed ('binary', 'macro', 'micro', 'weighted').
+    
+    Returns:
+        float: Recall score.
+    """
+    if average == 'binary':
+        # Binary classification: Recall = TP / (TP + FN)
+        tp = np.sum((y_true == 1) & (y_pred == 1))
+        fn = np.sum((y_true == 1) & (y_pred == 0))
+        return tp / (tp + fn) if (tp + fn) > 0 else 0.0
+
+    elif average in ['macro', 'micro', 'weighted']:
+        labels = np.unique(y_true)
+        recalls = []
+        for label in labels:
+            tp = np.sum((y_true == label) & (y_pred == label))
+            fn = np.sum((y_true == label) & (y_pred != label))
+            recalls.append(tp / (tp + fn) if (tp + fn) > 0 else 0.0)
+        if average == 'macro':
+            return np.mean(recalls)
+        elif average == 'micro':
+            tp = np.sum(y_true == y_pred)
+            fn = np.sum((y_true != y_pred) & (y_true != None))
+            return tp / (tp + fn) if (tp + fn) > 0 else 0.0
+        elif average == 'weighted':
+            weights = [np.sum(y_true == label) for label in labels]
+            return np.average(recalls, weights=weights)
+    else:
+        raise ValueError("Unsupported 'average' argument. Choose from 'binary', 'macro', 'micro', 'weighted'.")
