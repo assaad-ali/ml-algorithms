@@ -1,7 +1,7 @@
 import numpy as np
 from ..tree.decision_tree import DecisionTreeClassifier
 from sklearn import datasets
-from ..utils.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
+from ..utils.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix, plot_confusion_matrix
 
 def main():
     # Load the Iris dataset
@@ -31,7 +31,7 @@ def main():
     precision = precision_score(y_test, y_pred, average='macro')
     recall = recall_score(y_test, y_pred, average='macro')
     f1 = f1_score(y_test, y_pred, average='macro')
-    conf = confusion_matrix(y_test, y_pred)
+    conf = plot_confusion_matrix(confusion_matrix(y_test, y_pred), labels=iris.target_names)
     print(f"Accuracy: {acc} | Precision: {precision} | Recall: {recall} | F1 Score: {f1} | Confusion Matrix:\n{conf}")
 
 if __name__ == "__main__":
