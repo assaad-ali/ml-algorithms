@@ -32,7 +32,7 @@ def main():
     recall = recall_score(y_test, y_pred, average='macro')
     f1 = f1_score(y_test, y_pred, average='macro')
     conf = plot_confusion_matrix(confusion_matrix(y_test, y_pred), labels=iris.target_names)
-    print(f"Accuracy: {acc} | Precision: {precision} | Recall: {recall} | F1 Score: {f1} | Confusion Matrix:\n{conf}")
+    print(f"Accuracy: {acc}\n| Precision: {precision}\n| Recall: {recall}\n| F1 Score: {f1}\n| Confusion Matrix:\n{conf}")
 
 if __name__ == "__main__":
     main()

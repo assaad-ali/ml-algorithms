@@ -141,10 +141,9 @@ def plot_confusion_matrix(matrix, labels):
         matrix (ndarray): Confusion matrix.
         labels (list or ndarray): List or array of labels corresponding to the matrix rows and columns.
     """
-    # Print the header row (Predicted labels)
-    print("Confusion Matrix:")
-    print(f"Predicted labels -> {labels}")
+    result = f"Predicted labels -> {labels}\n"
     
-    # Print each row with actual labels on the side
     for i, row in enumerate(matrix):
-        print(f"Actual label {labels[i]}: {row}")
+        result += f"Actual label {labels[i]}: {row}\n"
+    
+    return result
