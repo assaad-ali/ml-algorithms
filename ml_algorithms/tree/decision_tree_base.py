@@ -35,7 +35,8 @@ class DecisionTreeBase(BaseModel, ABC):
         self.max_depth = max_depth
         self.min_samples_split = min_samples_split
         self.root = None
-        self.feature_indices = None  # For Random Forests or feature subsetting
+        self.n_features_ = None
+        self.feature_indices = None  # For feature subsetting (e.g., in Random Forests)
 
     def fit(self, X, y):
         """
@@ -56,8 +57,9 @@ class DecisionTreeBase(BaseModel, ABC):
         """
         n_samples, n_features = X.shape
 
-        # Stopping criteria
-        if (self.max_depth is not None and depth >= self.max_depth) or n_samples < self.min_samples_split:
+        # Check stopping criteria
+        if depth >= self.max_depth if self.max_depth is not None else False \
+                or n_samples < self.min_samples_split:
             leaf_value = self._calculate_leaf_value(y)
             return DecisionTreeNode(value=leaf_value)
 
